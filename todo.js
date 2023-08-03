@@ -147,4 +147,29 @@ var data = (localStorage.getItem('todoList')) ? JSON.parse(localStorage.getItem(
       }
     }
   }
+// --------------------------------------------------------------------------------------------------------------------------------
+  function filterTodoList() {
+    const filterSelect = document.getElementById('filter');
+    const filterValue = filterSelect.value;
+    const todoItems = todoList.getElementsByTagName('li');
+    const completedItems = completedList.getElementsByTagName('li');
+  
+    for (let i = 0; i < todoItems.length; i++) {
+      if (filterValue === 'all' || (filterValue === 'uncompleted' && !todoItems[i].classList.contains('completed')) ||
+        (filterValue === 'completed' && todoItems[i].classList.contains('completed'))) {
+        todoItems[i].style.display = 'block';
+      } else {
+        todoItems[i].style.display = 'none';
+      }
+    }
+  
+    for (let i = 0; i < completedItems.length; i++) {
+      if (filterValue === 'all' || (filterValue === 'uncompleted' && !completedItems[i].classList.contains('completed')) ||
+        (filterValue === 'completed' && completedItems[i].classList.contains('completed'))) {
+        completedItems[i].style.display = 'block';
+      } else {
+        completedItems[i].style.display = 'none';
+      }
+    }
+  }
   
