@@ -3,42 +3,135 @@ const taskInput = document.getElementById("taskInput");
 const taskList = document.getElementById("taskList");
 const calcDisplay = document.getElementById("calcDisplay");
 const historyList = document.getElementById("historyList");
+
 let historyItems = [];
 
-function addTask() {
-  const taskText = taskInput.value.trim();
-  if (taskText === "") return;
 
-  const li = document.createElement("li");
-  li.innerHTML = `<input type="checkbox" onclick="toggleTaskCompletion(this)">
-                  <span>${taskText}</span>
-                  <button class="delete-button" onclick="removeTask(this)">Delete</button>`;
-  taskList.appendChild(li);
-  taskInput.value = "";
-}
 
-function toggleTaskCompletion(checkbox) {
-  const taskItem = checkbox.parentNode;
-  taskItem.classList.toggle("completed");
-}
 
-function removeTask(button) {
-  const taskItem = button.parentNode;
-  taskList.removeChild(taskItem);
-}
+// function addTask() {
+//   const taskText = taskInput.value.trim();
+//   if (taskText !== "") {
+//     const taskId = Date.now().toString();
+//     const taskItem = `
+//       <li id="${taskId}" data-completed="false">
+//         <span>${taskText}</span>
+//         <button onclick="toggleCompleted('${taskId}')">Mark Completed</button>
+//         <button onclick="deleteTask('${taskId}')">Delete</button>
+//       </li>
+//     `;
+//     taskList.insertAdjacentHTML("beforeend", taskItem);
+//     taskInput.value = "";
+//   }
+// }
 
-function clearCompleted() {
-  const completedTasks = taskList.querySelectorAll(".completed");
-  completedTasks.forEach(task => taskList.removeChild(task));
-}
+// function deleteTask(taskId) {
+//   const task = document.getElementById(taskId);
+//   task.remove();
+// }
 
-function appendToDisplay(value) {
-  calcDisplay.value += value;
-}
+// function toggleCompleted(taskId) {
+//   const task = document.getElementById(taskId);
+//   const completed = task.getAttribute("data-completed");
+//   task.setAttribute("data-completed", completed === "false" ? "true" : "false");
+// }
 
-function clearDisplay() {
-  calcDisplay.value = "";
-}
+// function clearCompleted() {
+//   const tasks = taskList.querySelectorAll("li[data-completed='true']");
+//   tasks.forEach(task => task.remove());
+// }
+
+// function showAll() {
+//   const tasks = taskList.querySelectorAll("li");
+//   tasks.forEach(task => task.classList.remove("hidden"));
+// }
+
+// function showActive() {
+//   const tasks = taskList.querySelectorAll("li");
+//   tasks.forEach(task => {
+//     const completed = task.getAttribute("data-completed");
+//     if (completed === "true") {
+//       task.classList.add("hidden");
+//     } else {
+//       task.classList.remove("hidden");
+//     }
+//   });
+// }
+
+// function showCompleted() {
+//   const tasks = taskList.querySelectorAll("li");
+//   tasks.forEach(task => {
+//     const completed = task.getAttribute("data-completed");
+//     if (completed === "true") {
+//       task.classList.remove("hidden");
+//     } else {
+//       task.classList.add("hidden");
+//     }
+//   });
+// }
+
+
+$(document).ready(function() {
+  // Function to add a new task
+  function addTask() {
+    const taskInput = $(".todo-list-input");
+    const taskText = taskInput.val().trim();
+    if (taskText !== "") {
+      const taskItem = `
+        <li>
+          <div class="form-check"> <label class="form-check-label"> <input class="checkbox" type="checkbox"> ${taskText} <i class="input-helper"></i></label> </div> <i class="remove mdi mdi-close-circle-outline"></i>
+        </li>
+      `;
+      $(".todo-list").prepend(taskItem);
+      taskInput.val("");
+    }
+  }
+
+  // Function to delete a task
+  $(document).on("click", ".remove", function() {
+    $(this).parent().remove();
+  });
+
+  // Function to mark a task as completed
+  $(document).on("change", ".checkbox", function() {
+    const task = $(this).parent().parent();
+    task.toggleClass("completed");
+  });
+
+  // Function to clear completed tasks
+  function clearCompleted() {
+    $(".completed").remove();
+  }
+
+  // Function to show all tasks
+  function showAll() {
+    $(".todo-list li").show();
+  }
+
+  // Function to show active tasks
+  function showActive() {
+    $(".todo-list li.completed").hide();
+    $(".todo-list li:not(.completed)").show();
+  }
+
+  // Function to show completed tasks
+  function showCompleted() {
+    $(".todo-list li:not(.completed)").hide();
+    $(".todo-list li.completed").show();
+  }
+
+  // Click event for the "Add" button
+  $(".todo-list-add-btn").on("click", addTask);
+
+  // Click event for the "Clear Completed" button
+  $(document).on("click", "#clearCompletedBtn", clearCompleted);
+
+  // Click event for the filter buttons
+  $(document).on("click", "#showAllBtn", showAll);
+  $(document).on("click", "#showActiveBtn", showActive);
+  $(document).on("click", "#showCompletedBtn", showCompleted);
+});
+
 // ---------------------------------------------------------------------------
 
 
@@ -141,4 +234,6 @@ function getCurrentDate() {
   const options = { year: 'numeric', month: 'short', day: 'numeric' };
   return currentDate.toLocaleDateString('en-US', options);
 }
+// ---------------------------------------------------------------------------
+
 

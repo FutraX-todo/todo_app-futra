@@ -1,9 +1,63 @@
+
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alarm Setting App</title>
-  <link rel="stylesheet" type="text/css" href="alarm.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 30px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="time"],
+    select {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 8px 20px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Alarm Setting App</h1>
@@ -13,25 +67,124 @@
       <button onclick="setAlarm()">Set Alarm</button>
     </div>
     <button onclick="stopAlarm()" id="stopButton" disabled>Stop Alarm</button>
+
+    <!-- Additional Features (same as previous response) -->
+     <div>
+      <label for="alarmSound">Select Alarm Sound:</label>
+      <select id="alarmSound">
+        <option value="sound1.mp3">Sound 1</option>
+        <option value="sound2.mp3">Sound 2</option> 
+        <option value="sound1.mp3">Sound 3</option>
+        <option value="sound2.mp3">Sound 4</option> 
+        <!-- Add more sound options here -->
+       </select>
+    </div>
+    <div>
+      <label for="repeatDays">Repeat on:</label>
+      <input type="checkbox" name="repeatDays" value="monday">Monday<br>
+      <input type="checkbox" name="repeatDays" value="tuesday">Tuesday<br>
+      <input type="checkbox" name="repeatDays" value="wednesday">Wednesday<br>
+      <input type="checkbox" name="repeatDays" value="thursday">Thursday<br>
+      <input type="checkbox" name="repeatDays" value="friday">Friday<br>
+      <input type="checkbox" name="repeatDays" value="saturday">Saturday<br>
+      <input type="checkbox" name="repeatDays" value="sunday">Sunday
+    </div>
+    <div>
+      <label for="snoozeDuration">Snooze Duration (minutes):</label>
+      <input type="number" id="snoozeDuration" min="1" max="60" value="5">
+    </div>
+    <div>
+      <label for="volumeControl">Volume:</label>
+      <input type="range" id="volumeControl" min="0" max="100" step="1" value="50">
+    </div>
+    <div>
+      <label for="alarmMessage">Alarm Message:</label>
+      <input type="text" id="alarmMessage">
+    </div>
+    <div>
+      <label for="vibrationOption">Vibration:</label>
+      <input type="checkbox" id="vibrationOption" checked>
+    </div>
+    <div>
+      <label for="timeFormat">Time Format:</label>
+      <select id="timeFormat">
+        <option value="12-hour">12-hour</option>
+        <option value="24-hour">24-hour</option>
+      </select>
+    </div>
+  </div> 
+    <!-- ... -->
+
   </div>
 
-  <script src="alarm.js"></script>
+  <!-- JavaScript -->
+  <script>
+    let alarmInterval;
+
+    function setAlarm() {
+      const alarmTimeInput = document.getElementById("alarmTime");
+      const alarmTime = alarmTimeInput.value;
+      if (!alarmTime) {
+        alert("Please set the alarm time.");
+        return;
+      }
+
+      const now = new Date();
+      const alarmTimeParts = alarmTime.split(":");
+      const alarmDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        parseInt(alarmTimeParts[0]),
+        parseInt(alarmTimeParts[1])
+      );
+
+      const currentTime = new Date();
+      if (alarmDate <= currentTime) {
+        alarmDate.setDate(alarmDate.getDate() + 1); // Set the alarm for tomorrow if it's already past the alarm time for today
+      }
+
+      const timeUntilAlarm = alarmDate.getTime() - currentTime.getTime();
+
+      if (timeUntilAlarm <= 0) {
+        alert("Invalid alarm time. Please set a future time.");
+        return;
+      }
+
+      // Disable the set alarm button and enable the stop button
+      document.getElementById("stopButton").disabled = false;
+      document.getElementById("alarmTime").disabled = true;
+      document.getElementById("stopButton").textContent = "Stop Alarm";
+
+      // Start the alarm
+      alarmInterval = setTimeout(() => {
+        triggerAlarm();
+      }, timeUntilAlarm);
+    }
+
+    function stopAlarm() {
+      // Clear the alarm interval and reset the UI
+      clearTimeout(alarmInterval);
+      document.getElementById("stopButton").disabled = true;
+      document.getElementById("alarmTime").disabled = false;
+      document.getElementById("stopButton").textContent = "Stop Alarm";
+    }
+
+    function triggerAlarm() {
+      // Play alarm sound (you need to implement this part)
+      // Show alarm message (you need to implement this part)
+
+      // Reset the UI after the alarm is triggered
+      document.getElementById("stopButton").disabled = true;
+      document.getElementById("alarmTime").disabled = false;
+      document.getElementById("stopButton").textContent = "Stop Alarm";
+
+      // Implement snooze functionality if desired
+    }
+  </script>
 </body>
+
 </html>
 
 
-<!-- <!DOCTYPE html>
-<html>
-<head>
-  <title>Alarm Clock</title>
-  <link rel="stylesheet" type="text/css" href="alarm.css">
-</head>
-<body>
-  <h1>Set Alarm</h1>
-  <label for="alarmTime">Alarm Time:</label>
-  <input type="time" id="alarmTime">
-  <button onclick="setAlarm()">Set Alarm</button>
-  <button id="stopButton" onclick="stopAlarm()" disabled>Stop Alarm</button>
-  <script src="alarm.js"></script>
-</body>
-</html> -->
+ 
